@@ -1,77 +1,87 @@
-import streamlit as st
-import pandas as pd
-import sqlalchemy as sa # Support connect to SQL server
-import urllib # Support connect to SQL server
-import time
+import openai
+import configparser
+import os
 
+proxy_server = 'http://rb-proxy-de.bosch.com:8080'
+os.environ['http_proxy'] = proxy_server
+# Set the https_proxy environment variable
+os.environ['https_proxy'] = proxy_server
+print(os.environ['http_proxy'])
+print(os.environ['https_proxy'])
 
+# Load API key from config.ini
+config = configparser.ConfigParser()
+config.read(r'C:\Users\HPT7HC\Desktop\Sentimental_analysis\config_sentimental.ini')
 
+openai.api_type = "azure"
+openai.api_base = "https://openai-sentiment-vietnam.openai.azure.com/"
+openai.api_version = "2023-07-01-preview"
+openai.api_key = config.get('OpenAI', 'api_key')
 
-page_title = "Input Web Demo "
-page_icon = "👦🏻"
-layout = "wide"
-st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
-# st.title(page_title + " " + page_icon)
+prompt = f"""
 
-server = 'SGPSQC01CLU002.apac.bosch.com,56482'
-database = 'DB_SOVH_BI_MS_SQL'
-tb_name = 'TEST_DIM_LOCATION_SUPPLEMENT'
-schema = 'dbo'
-if_exist = 'replace'
+Your are a customer experience employee, specialized in analysis of customer feedback.
+Please extract relevant aspects from the input text and format output in JSON. Use the given examples to learn the format and analysis.
+In addition to the text, the NPS score of the feedback is given. This is a scale from 0-10, which is used to classify customers. 0 to 6 are detractors, 7 to 8 are passive customers, 9 to 10 are promoters. 
+Use this scale as an indicator if the sentiment is not clearly visible. 
 
+Examples:              
+NPS: 10, Feedback: Good quality of its components and after-sales service is very well qualified as well as committed to the service and the customer to make the implemented solution work 100%.                             
+[                
+{{"aspect":"product quality", "segment":"Good quality of its components", "attribute":"good", "sentiment":"positive"}},                
+{{"aspect":"customer support", "segment":"after-sales service is very well qualified", "attribute":"qualification", "sentiment":"positive"}}, 
+{{"aspect":"customer support", "segment":"after-sales service is very well qualified", "attribute":"knowledge", "sentiment":"positive"}}, 
+{{"aspect":"customer support", "segment":"after-sales service is very well qualified as well as committed", "attribute":"commitment", "sentiment":"positive"}}                               
+]
 
-class PandasToSQL:
+NPS: 6, Feedback: unstable product quality, slow feedback, shirk responsibility.
+[
+{{"aspect":"product quality", "segment":"unstable product quality", "attribute":"unstable", "sentiment":"negative"}},      
+{{"aspect":"customer support", "segment":"slow feedback", "attribute":"slow", "sentiment":"negative"}},  
+{{"aspect":"attitude", "segment":"shirk responsibility", "attribute":"responsibility", "sentiment":"negative"}}
+]
 
-    def __init__(self, server = '' , database = '', schema = '', if_exist = ''):
-        self.server = server
-        self.database = database
-        self.schema = schema
-        self.if_exist = if_exist
-        
-    def chunker(self,seq, size):
-        return (seq[pos:pos + size] for pos in range(0, len(seq), size))
+NPS: 8, Feedback: sometimes there is a lot of bureaucracy and the prices are a bit high. excellent quality.
+[
+{{"aspect":"process", "segment":"sometimes there is a lot of bureaucracy", "attribute":"bureaucratic", "sentiment":"negative"}},      
+{{"aspect":"price", "segment":"the prices are a bit high", "attribute":"high", "sentiment":"negative"}},  
+{{"aspect":"product quality", "segment":"excellent quality", "attribute":"excellent", "sentiment":"positive"}}
+]
 
-    def insert_with_progress(self,dataframe,dbTable):
-        conn= urllib.parse.quote_plus('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+self.server+';DATABASE='+self.database)+';Trusted_Connection=yes'
-        engine = sa.create_engine('mssql+pyodbc:///?odbc_connect={}'.format(conn),fast_executemany=True)
-        dataframe = dataframe.convert_dtypes() # auto convert data type of dataframe
-        chunksize = int(len(dataframe) / 1) 
+NPS: 8, Feedback: great communication, willingness, reliability, professionality
+[
+{{"aspect":"communication", "segment":"great communication ", "attribute":"great", "sentiment":"positive"}},                
+{{"aspect":"willingness", "segment":"great communication, willingness", "attribute":"great", "sentiment":"positive"}}, 
+{{"aspect":"reliability", "segment":"great communication, willingness, reliability", "attribute":"great", "sentiment":"positive"}}, 
+{{"aspect":"professionality", "segment":"great communication, willingness, reliability, professionality", "attribute":"great", "sentiment":"positive"}}  
+]
 
-        my_bar = st.progress(0, text='progress bar')
-        for i, cdf in enumerate(self.chunker(dataframe, chunksize)):
-            replace = self.if_exist if i == 0 else "append"
-            cdf.to_sql(dbTable, schema=self.schema, con = engine, index=False, if_exists=replace)
-            time.sleep(0.1)
-            my_bar.progress((i + 1)/ chunksize, text='progress bar')
-        my_bar.progress(100)
-    
+NPS: 4, Feedback: quality and delivery lead time
+[
+{{"aspect":"product quality", "segment":"quality ", "attribute":"bad", "sentiment":"negative"}},                
+{{"aspect":"delivery", "segment":"delivery lead time", "attribute":"bad", "sentiment":"negative"}}, 
+]
 
-# Streamlit UI
-def main():
-    st.title('Excel to Database Uploader 😸')
-    uploaded_file = st.file_uploader('Upload Excel File', type=['xlsx'])
-    if uploaded_file is not None:
-            df = pd.read_excel(uploaded_file)
-            st.write('Preview of the uploaded data:')
-            st.dataframe(df)
-            if st.button('Upload to Database'):
-                # SQL server metadata
-                server = 'SGPSQC01CLU002.apac.bosch.com,56482'
-                database = 'DB_SOVH_BI_MS_SQL'
-                tb_name = 'TEST_STREAMLIT'
-                schema = 'dbo'
-                if_exist = 'replace'
-              
-                PandasToSQL(server,database,schema,if_exist).insert_with_progress(df,tb_name)
+Input:
+{"NPS: 7, Feedback: I like how fast the delivery is, but hate the person who sale it to me"}
+"""
 
-                st.write(f'Successfully import :red[{df.shape[0]}] rows to :red[{database}] with table name as :red[{tb_name}]')
-if __name__ == '__main__':
-    main()
+prompt2 = "who is the president of Vietnam"
 
+message_text = [{"role":"system","content":"You are an AI assistant that helps people find information."},\
+                {"role":"user","content":prompt2}]
 
-# progress_text = "Operation in progress. Please wait."
-# my_bar = st.progress(0, text=progress_text)
+completion = openai.ChatCompletion.create(
+  engine="gpt-vietnam",
+  messages = message_text,
+  temperature=0,
+  max_tokens=1500,
+  top_p=0.95,
+  frequency_penalty=0,
+  presence_penalty=0,
+  stop=None
+)
 
-# for percent_complete in range(100):
-#     time.sleep(0.1)
-#     my_bar.progress(percent_complete + 1, text=progress_text)
+# print(completion)
+
+print(completion["choices"][0]["message"]["content"])
