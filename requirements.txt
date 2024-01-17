@@ -2,12 +2,11 @@ numpy==1.22.3
 pandas==1.4.3
 plotly==5.11.0
 requests==2.27.1
-streamlit==1.25.0
+streamlit==1.19.0
 streamlit_authenticator==0.1.5
 openpyxl == 3.0.10
 matplotlib==3.5.2
-gspread==5.3.2
 XlsxWriter==3.0.3
-sqlalchemy==2.0.20
-pymssql==2.2.8
+openai==0.28.0
+sqlalchemy==2.0.25
 pyodbc==4.0.39
