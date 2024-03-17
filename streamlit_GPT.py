@@ -94,8 +94,7 @@ if st.button('Submit'):
 
     # Load API key from config.ini
     config = configparser.ConfigParser()
-    config.read(
-        r'/Users/phamtanthanh/Desktop/Sentimental_analysis/config_sentimental.ini')
+    config.read('config_sentimental.ini')
 
     openai.api_type = "azure"
     openai.api_base = "https://openai-sentiment-vietnam.openai.azure.com/"
@@ -181,7 +180,7 @@ if st.button('Submit'):
     df = pd.DataFrame(json.loads(
         completion["choices"][0]["message"]["content"]))
     # Specify the file path
-    file_path = r"/Users/phamtanthanh/Desktop/Sentimental_analysis/sentimental_data.csv"
+    file_path = "sentimental_data.csv"
     # Append new values to the csv file
     df.to_csv(file_path, mode = 'a', header=False, index=False)
 
