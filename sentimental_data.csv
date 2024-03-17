@@ -1,0 +1,40 @@
+aspect,segment,attribute,sentiment,NSTM
+Emotional Well-being,Feel a bit sad,Sadness,Negative,1
+Code Quality,Code broke,Code broke,Negative,2
+Weather,The weather is perfect for picnic,Perfect weather,Positive,9
+general,I feel great today. The weather is perfect for picnic. Maybe I am going to invite some of my friends,,neutral
+Company Culture,Good opportunities for learning and improvement,Good opportunities,Positive,9
+Company Culture,Good opportunities for learning and improvement,Good opportunities,Positive,9
+Company Culture,Best company to work with,Best company,Positive,9
+Salary,High salary,High salary,Positive,9
+Company Culture,Best company to work with,Best company,Positive,9
+Salary,High salary,High salary,Positive,9
+Company Culture,Working in this company allows me to make many new friends,Opportunity to make friends,Positive,9
+Relationships,"I also know my wife here, which I am not sure is a good or bad thing",Uncertainty,Suggestive,7
+Company Culture,Working in this company allows me to make many new friends and I also know my wife here,Social environment,Positive,9
+Networking,Recommend the company to have more outdoor activities for networking,More activities needed,Suggestive,5
+Company Culture,This is such a wonderful company,Wonderful company,Positive,8
+Working Model,I enjoy the working model here,Enjoyable working model,Positive,8
+Working Environment,Strong sunshine on my desk in the morning,Unfavorable working environment,Negative,2
+Personal Comfort,Make my skin dark,Uncomfortable,Negative,2
+New Colleagues,I know a lot of new people here,Positive,Positive,9
+Work Support,Some people help me a lot with my work,Helpful,Positive,9
+Personal Support,Some people help me a lot with my personal life,Helpful,Positive,9
+New Colleagues,I know a lot of new people here,Positive experience,Positive,9
+Helpfulness,Some people help me a lot with both my work and personal life,Helpful,Positive,9
+Learning Activities,Recommend having more learning activities for networking,Recommendation,Suggestive,8
+Break Time,More time break at lunch,More time needed,Suggestive,5
+Lunch Time,Barely have enough time to eat,Not enough time,Negative,2
+Break Time,More time break at lunch,More time needed,Suggestive,3
+Lunch Time,Barely have enough time to eat,Not enough time,Negative,1
+Break Time,More time break at lunch,More time needed,Suggestive,5
+Food,Barely have enough time to eat,Not enough time to eat,Negative,2
+Office Perks,Free coffee is great,Great coffee,Positive,8
+Break Time,More time break at lunch,More time needed,Suggestive,5
+Food,Barely have enough time to eat,Not enough time to eat,Negative,2
+Office Perks,Free coffee is great,Great coffee,Positive,8
+Company Culture,"Công ty có phúc lợi tốt. Môi trường rất là trẻ trung năng động. Mọi người rất là thân thiện, không có drama",Positive company culture,Positive,8
+Self-Development,Có nhiều bài toán hay phát triển bản thân,Opportunities for self-development,Positive,8
+Company Culture,Tất cả đồng nghiệp đều là bạn bè cùng trường. Có cả thầy cùng trường.,Friendly colleagues,Positive,8
+Project Management,"Nhiều dự án tàn tàn, không có gì mới mẻ",Lack of innovation,Negative,2
+Company Image,Ước gì công ty có bạn gái đẹp,Inappropriate comment,Negative,0
