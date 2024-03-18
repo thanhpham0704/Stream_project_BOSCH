@@ -80,7 +80,7 @@ def bar(df, yvalue, xvalue, text, title, y_title, x_title, color=None, discrete_
     return fig
 
 
-st.title("Tell me how you feel")
+st.title("What do you think about your company?")
 st.subheader("AI-powered sentimental analysis of DSBI team")
 st.warning('Developed by Thanh Pham, API key provided by DC_MKT', icon="😉")
 
